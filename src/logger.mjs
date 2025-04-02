@@ -10,7 +10,8 @@ const isBun = typeof Bun !== 'undefined';
 const isEdge = !isNode && !isDeno && !isBun && typeof self !== 'undefined' && typeof self.fetch === 'function';
 
 const LOG_DIR = './log';
-let logStream = null;
+let mainLogStream = null;
+let keyStatusLogStream = null;
 let currentLogDate = '';
 
 // --- File System Operations (Adapters) ---
@@ -46,16 +47,17 @@ function getLogDate() {
     return `${year}-${month}-${day}`;
 }
 
-async function getLogStream() {
+// Get or create the main log stream for the current date
+async function getMainLogStream() {
     const dateStr = getLogDate();
-    if (dateStr === currentLogDate && logStream) {
-        return logStream;
+    if (dateStr === currentLogDate && mainLogStream) {
+        return mainLogStream;
     }
 
     // Close previous stream if date changed
-    if (logStream) {
-        await new Promise(resolve => logStream.end(resolve));
-        logStream = null;
+    if (mainLogStream) {
+        await new Promise(resolve => mainLogStream.end(resolve));
+        mainLogStream = null;
     }
 
     currentLogDate = dateStr;
@@ -64,78 +66,123 @@ async function getLogStream() {
 
     if (isNode) {
         if (await ensureLogDirExistsNode()) {
-            logStream = await createWriteStreamNode(logFilePath);
+            mainLogStream = await createWriteStreamNode(logFilePath);
         }
     } else if (isDeno) {
-        // Deno file system access (requires --allow-write flag)
         try {
             await Deno.mkdir(LOG_DIR, { recursive: true });
-            // Deno doesn't have a direct append stream like Node, we'll append manually
-            logStream = {
+            mainLogStream = {
                 write: async (chunk) => {
-                    try {
-                        await Deno.writeTextFile(logFilePath, chunk, { append: true });
-                    } catch (e) { console.error(`[Logger-Deno] Error writing to log:`, e); }
+                    try { await Deno.writeTextFile(logFilePath, chunk, { append: true }); }
+                    catch (e) { console.error(`[Logger-Deno] Error writing to main log:`, e); }
                 },
-                end: (cb) => { if (cb) cb(); } // Mock end for compatibility
+                end: (cb) => { if (cb) cb(); }
             };
-        } catch (e) { console.error(`[Logger-Deno] Error setting up log file:`, e); }
+        } catch (e) { console.error(`[Logger-Deno] Error setting up main log file:`, e); }
     } else if (isBun) {
-         // Bun file system access (similar to Node but might use Bun API)
-         // For simplicity, let's assume Bun's Node compatibility works here
-         // Or use Bun.write directly for appending
          try {
             await fs.mkdir(LOG_DIR, { recursive: true }); // Assuming Node fs compat works
-             logStream = {
+             mainLogStream = {
                  write: async (chunk) => {
-                     try {
-                         await Bun.write(logFilePath, chunk); // Bun.write appends by default if file exists
-                     } catch (e) { console.error(`[Logger-Bun] Error writing to log:`, e); }
+                     try { await Bun.write(logFilePath, chunk); } // Bun.write appends
+                     catch (e) { console.error(`[Logger-Bun] Error writing to main log:`, e); }
                  },
                  end: (cb) => { if (cb) cb(); }
              };
-         } catch (e) { console.error(`[Logger-Bun] Error setting up log file:`, e); }
-    }
-    // Edge environments cannot write to local file system
-
-    if (!logStream) {
-        console.warn('[Logger] File logging disabled (unsupported environment or setup error).');
+         } catch (e) { console.error(`[Logger-Bun] Error setting up main log file:`, e); }
     }
 
-    return logStream;
+    if (!mainLogStream) {
+        console.warn('[Logger] Main file logging disabled (unsupported environment or setup error).');
+    }
+    return mainLogStream;
 }
 
-export async function logToFile(message) {
+// Get or create the key status log stream
+async function getKeyStatusLogStream() {
+    // Key status log doesn't rotate daily, always use the same file
+    if (keyStatusLogStream) {
+        return keyStatusLogStream;
+    }
+
+    const logFileName = `key_status.log`;
+    const logFilePath = path.join(LOG_DIR, logFileName);
+
+    if (isNode) {
+        if (await ensureLogDirExistsNode()) {
+            keyStatusLogStream = await createWriteStreamNode(logFilePath);
+        }
+    } else if (isDeno) {
+        try {
+            await Deno.mkdir(LOG_DIR, { recursive: true });
+            keyStatusLogStream = {
+                write: async (chunk) => {
+                    try { await Deno.writeTextFile(logFilePath, chunk, { append: true }); }
+                    catch (e) { console.error(`[Logger-Deno] Error writing to key status log:`, e); }
+                },
+                end: (cb) => { if (cb) cb(); }
+            };
+        } catch (e) { console.error(`[Logger-Deno] Error setting up key status log file:`, e); }
+    } else if (isBun) {
+         try {
+            await fs.mkdir(LOG_DIR, { recursive: true });
+             keyStatusLogStream = {
+                 write: async (chunk) => {
+                     try { await Bun.write(logFilePath, chunk); }
+                     catch (e) { console.error(`[Logger-Bun] Error writing to key status log:`, e); }
+                 },
+                 end: (cb) => { if (cb) cb(); }
+             };
+         } catch (e) { console.error(`[Logger-Bun] Error setting up key status log file:`, e); }
+    }
+
+     if (!keyStatusLogStream) {
+        console.warn('[Logger] Key status file logging disabled (unsupported environment or setup error).');
+    }
+    return keyStatusLogStream;
+}
+
+// Generic write function
+async function writeToStream(streamGetter, message) {
     const timestamp = new Date().toISOString();
-    const logMessage = `[${timestamp}] ${message}\n---\n`; // Add separator
+    const logMessage = `[${timestamp}] ${message}\n`;
 
-    // Always log to console
-    console.log(`[Log] ${message}`);
-
-    // Try writing to file if supported
-    const stream = await getLogStream();
+    const stream = await streamGetter();
     if (stream) {
         try {
             await new Promise((resolve, reject) => {
-                // Deno/Bun mock stream might not be a proper Writable stream
                 if (typeof stream.write === 'function') {
                     stream.write(logMessage, (err) => {
                         if (err) reject(err);
                         else resolve();
                     });
-                    // For non-node streams that write immediately
-                    if (!isNode) resolve();
+                    if (!isNode) resolve(); // Assume immediate write for non-node mocks
                 } else {
                     resolve(); // Cannot write
                 }
             });
         } catch (error) {
             console.error('[Logger] Error writing to log stream:', error);
-            // Prevent future writes if stream is broken?
-            logStream = null;
+            // Reset stream variable so it tries to recreate next time
+            if (streamGetter === getMainLogStream) mainLogStream = null;
+            if (streamGetter === getKeyStatusLogStream) keyStatusLogStream = null;
         }
     }
 }
+
+// Log to the main daily log file
+export async function logToFile(message) {
+    // Always log to console
+    console.log(`[Log] ${message.substring(0, 200)}${message.length > 200 ? '...' : ''}`); // Keep console log brief
+    await writeToStream(getMainLogStream, message);
+}
+
+// Log key status to the dedicated key_status.log file
+export async function logKeyStatus(statusData) {
+    const message = `Key Pool Status:\n${safeStringify(statusData, 2)}\n---`;
+    await writeToStream(getKeyStatusLogStream, message);
+}
+
 
 // Helper to safely stringify potentially large or circular objects
 function safeStringify(obj, space = 2) {
@@ -146,10 +193,11 @@ function safeStringify(obj, space = 2) {
         }
         // Simple truncation for potentially large bodies
         const str = JSON.stringify(obj, null, space);
-        if (str && str.length > 5000) { // Limit log size
-            return str.substring(0, 5000) + '... [truncated]';
+        // Increase limit slightly for key status, but still limit
+        if (str && str.length > 10000) {
+            return str.substring(0, 10000) + '... [truncated]';
         }
-        return str;
+        return str || '[stringify failed]'; // Ensure return value
     } catch (e) {
         if (e instanceof TypeError && e.message.includes('circular structure')) {
             return '[Circular Structure]';
@@ -163,7 +211,9 @@ function safeStringify(obj, space = 2) {
 export function formatLog(type, data) {
     let logString = `${type.toUpperCase()} LOG\n`;
     for (const key in data) {
-        logString += `${key}: ${safeStringify(data[key])}\n`;
+        // Ensure value exists before stringifying
+        const value = data[key] !== undefined ? safeStringify(data[key]) : '[undefined]';
+        logString += `${key}: ${value}\n`;
     }
     return logString;
 }

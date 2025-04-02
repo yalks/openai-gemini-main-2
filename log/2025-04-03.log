@@ -1,57 +1,243 @@
-[2025-04-02T16:01:45.137Z] REQUEST LOG
+[2025-04-02T17:09:31.055Z] REQUEST LOG
+requestId: "G7tyQ7xNs1vHA0zxCtLSjebLxHLLS"
 method: "POST"
-url: "http://127.0.0.1:8080/v1/v1/chat/completions"
+url: "http://127.0.0.1:8080/v1/chat/completions"
 headers: {
-  "host": "127.0.0.1:8080",
-  "connection": "keep-alive",
-  "content-length": "1322",
-  "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
-  "x-title": "Cherry Studio",
-  "http-referer": "https://cherry-ai.com",
-  "x-stainless-retry-count": "0",
-  "sec-ch-ua-mobile": "?0",
-  "authorization": "Bearer",
-  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) CherryStudio/1.1.17 Chrome/126.0.6478.234 Electron/31.7.6 Safari/537.36",
-  "content-type": "application/json",
+  "content-length": "88467",
   "accept": "application/json",
-  "x-api-key": "",
-  "sec-ch-ua-platform": "\"macOS\"",
-  "sec-fetch-site": "cross-site",
-  "sec-fetch-mode": "cors",
-  "sec-fetch-dest": "empty",
-  "accept-encoding": "gzip, deflate, br, zstd",
-  "accept-language": "zh-CN"
+  "content-type": "application/json",
+  "user-agent": "Qa/JS 4.78.1",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.78.1",
+  "x-stainless-os": "MacOS",
+  "x-stainless-arch": "arm64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v20.18.2",
+  "authorization": "Bearer sk-4XhOSyRHBlsdZq6CqGHModmnp6yr7TvJfdfKuPyYlLfXD7cq",
+  "http-referer": "https://github.com/RooVetGit/Roo-Cline",
+  "x-title": "Roo Code",
+  "x-stainless-retry-count": "0",
+  "accept-encoding": "gzip,deflate",
+  "host": "127.0.0.1:8080",
+  "connection": "close"
 }
-body: {
-  "model": "gemini-2.5-pro-exp-03-25",
-  "messages": [
-    {
-      "role": "user",
-      "content": "hi"
-    },
-    {
-      "role": "assistant",
-      "content": "Hey there! 👋\n\nWhat can I do for you today?Hey there! 👋\n\nWhat can I do for you today?"
-    },
-    {
-      "role": "user",
-      "content": "介绍你自己"
-    },
-    {
-      "role": "assistant",
-      "content": "你好！我是一个大型语言模型，由 Google 训练。\n\n你好！我是一个大型语言模型，由 Google 训练。\n\n我可以做很多事情，比如：\n\n1.  **回答你的问题**：无论是关于事实、概念还是其他的疑问，我都会尽力提供信息。\n2.  **生成文本**：我可以写故事、诗歌、邮件、代码，或者帮你构思内容。\n3.  **翻译语言**：我可以帮你理解或转换不同语言的文本。\n4.  **总结信息**：我可以帮你提炼长篇文章或对话的要点。\n5.  **和你聊天**：我们可以就各种话题进行对话。\n\n简单来说，我是一个基于文本的AI，旨在帮助你获取信息、解决问题和进行创造性的工作。\n\n你想了解我的哪方面，或者有什么我可以帮你的吗？"
-    },
-    {
-      "role": "user",
-      "content": "帮我使用 python 写一个 hello word "
-    }
-  ],
-  "stream": true
-}
+body: "{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]"
 
----
-[2025-04-02T16:01:54.191Z] RESPONSE LOG
-requestUrl: "http://127.0.0.1:8080/v1/v1/chat/completions"
+[2025-04-02T17:09:31.056Z] [DEBUG][ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] 完整请求路径: /v1/chat/completions
+[2025-04-02T17:09:31.056Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Attempt 1/4 using Key ID: key-39 for /chat/completions
+[2025-04-02T17:09:31.056Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Error during attempt 1 for /chat/completions (Key: key-39): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.056Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Attempt 2/4 using Key ID: key-30 for /chat/completions
+[2025-04-02T17:09:31.057Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Error during attempt 2 for /chat/completions (Key: key-30): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.057Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Attempt 3/4 using Key ID: key-46 for /chat/completions
+[2025-04-02T17:09:31.057Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Error during attempt 3 for /chat/completions (Key: key-46): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.057Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Attempt 4/4 using Key ID: key-14 for /chat/completions
+[2025-04-02T17:09:31.057Z] [ReqID: G7tyQ7xNs1vHA0zxCtLSjebLxHLLS] Error during attempt 4 for /chat/completions (Key: key-14): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.059Z] ERROR LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 500
+message: "处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'"
+stack: "HttpError: 处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'\n    at handleCompletions (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:483:15)\n    at async fetch (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:210:22)"
+
+[2025-04-02T17:09:31.060Z] RESPONSE LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 500
+statusText: ""
+headers: {
+  "access-control-allow-headers": "*",
+  "access-control-allow-methods": "*",
+  "access-control-allow-origin": "*",
+  "content-type": "text/plain;charset=UTF-8"
+}
+body: "处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'"
+
+[2025-04-02T17:09:31.509Z] REQUEST LOG
+requestId: "7fjJoeJbYQePlJ294AFP0QbU6mLJ5"
+method: "POST"
+url: "http://127.0.0.1:8080/v1/chat/completions"
+headers: {
+  "content-length": "88467",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "Qa/JS 4.78.1",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.78.1",
+  "x-stainless-os": "MacOS",
+  "x-stainless-arch": "arm64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v20.18.2",
+  "authorization": "Bearer sk-4XhOSyRHBlsdZq6CqGHModmnp6yr7TvJfdfKuPyYlLfXD7cq",
+  "http-referer": "https://github.com/RooVetGit/Roo-Cline",
+  "x-title": "Roo Code",
+  "x-stainless-retry-count": "1",
+  "accept-encoding": "gzip,deflate",
+  "host": "127.0.0.1:8080",
+  "connection": "close"
+}
+body: "{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]"
+
+[2025-04-02T17:09:31.509Z] [DEBUG][ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] 完整请求路径: /v1/chat/completions
+[2025-04-02T17:09:31.509Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Attempt 1/4 using Key ID: key-4 for /chat/completions
+[2025-04-02T17:09:31.509Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Error during attempt 1 for /chat/completions (Key: key-4): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.510Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Attempt 2/4 using Key ID: key-13 for /chat/completions
+[2025-04-02T17:09:31.510Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Error during attempt 2 for /chat/completions (Key: key-13): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.510Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Attempt 3/4 using Key ID: key-35 for /chat/completions
+[2025-04-02T17:09:31.510Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Error during attempt 3 for /chat/completions (Key: key-35): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.510Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Attempt 4/4 using Key ID: key-9 for /chat/completions
+[2025-04-02T17:09:31.510Z] [ReqID: 7fjJoeJbYQePlJ294AFP0QbU6mLJ5] Error during attempt 4 for /chat/completions (Key: key-9): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:31.510Z] ERROR LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 500
+message: "处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'"
+stack: "HttpError: 处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'\n    at handleCompletions (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:483:15)\n    at async fetch (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:210:22)"
+
+[2025-04-02T17:09:31.511Z] RESPONSE LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 500
+statusText: ""
+headers: {
+  "access-control-allow-headers": "*",
+  "access-control-allow-methods": "*",
+  "access-control-allow-origin": "*",
+  "content-type": "text/plain;charset=UTF-8"
+}
+body: "处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'"
+
+[2025-04-02T17:09:32.351Z] REQUEST LOG
+requestId: "kcEZCSoEuR7lB94iTnW9WaJlaUgxQ"
+method: "POST"
+url: "http://127.0.0.1:8080/v1/chat/completions"
+headers: {
+  "content-length": "88467",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "Qa/JS 4.78.1",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.78.1",
+  "x-stainless-os": "MacOS",
+  "x-stainless-arch": "arm64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v20.18.2",
+  "authorization": "Bearer sk-4XhOSyRHBlsdZq6CqGHModmnp6yr7TvJfdfKuPyYlLfXD7cq",
+  "http-referer": "https://github.com/RooVetGit/Roo-Cline",
+  "x-title": "Roo Code",
+  "x-stainless-retry-count": "2",
+  "accept-encoding": "gzip,deflate",
+  "host": "127.0.0.1:8080",
+  "connection": "close"
+}
+body: "{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]"
+
+[2025-04-02T17:09:32.351Z] [DEBUG][ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] 完整请求路径: /v1/chat/completions
+[2025-04-02T17:09:32.351Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Attempt 1/4 using Key ID: key-23 for /chat/completions
+[2025-04-02T17:09:32.351Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Error during attempt 1 for /chat/completions (Key: key-23): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:32.352Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Attempt 2/4 using Key ID: key-41 for /chat/completions
+[2025-04-02T17:09:32.352Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Error during attempt 2 for /chat/completions (Key: key-41): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:32.352Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Attempt 3/4 using Key ID: key-18 for /chat/completions
+[2025-04-02T17:09:32.352Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Error during attempt 3 for /chat/completions (Key: key-18): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:32.353Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Attempt 4/4 using Key ID: key-6 for /chat/completions
+[2025-04-02T17:09:32.353Z] [ReqID: kcEZCSoEuR7lB94iTnW9WaJlaUgxQ] Error during attempt 4 for /chat/completions (Key: key-6): Cannot create property 'requestId' on string '{"model":"gemini-2.5-pro-exp-03-25","temperature":0,"messages":[{"role":"system","content":"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n====\n\nTOOL USE\n\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\n\n# Tool Use Formatting\n\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\n\n<tool_name>\n<parameter1_name>value1</parameter1_name>\n<parameter2_name>value2</parameter2_name>\n...\n</tool_name>\n\nFor example:\n\n<read_file>\n<path>src/main.js</path>\n</read_file>\n\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\n\n# Tools\n\n## read_file\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \"1 | const x = 1\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\nParameters:\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'
+[2025-04-02T17:09:32.354Z] ERROR LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 500
+message: "处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'"
+stack: "HttpError: 处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'\n    at handleCompletions (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:483:15)\n    at async fetch (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:210:22)"
+
+[2025-04-02T17:09:32.354Z] RESPONSE LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 500
+statusText: ""
+headers: {
+  "access-control-allow-headers": "*",
+  "access-control-allow-methods": "*",
+  "access-control-allow-origin": "*",
+  "content-type": "text/plain;charset=UTF-8"
+}
+body: "处理/chat/completions请求出错: Cannot create property 'requestId' on string '{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]'"
+
+[2025-04-02T17:09:45.391Z] REQUEST LOG
+requestId: "I7baCGzHQcwZ7yqEN43yLWrt3Xczz"
+method: "POST"
+url: "http://127.0.0.1:8080/v1/chat/completions"
+headers: {
+  "content-length": "110022",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "Qa/JS 4.78.1",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.78.1",
+  "x-stainless-os": "MacOS",
+  "x-stainless-arch": "arm64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v20.18.2",
+  "authorization": "Bearer sk-4XhOSyRHBlsdZq6CqGHModmnp6yr7TvJfdfKuPyYlLfXD7cq",
+  "http-referer": "https://github.com/RooVetGit/Roo-Cline",
+  "x-title": "Roo Code",
+  "x-stainless-retry-count": "0",
+  "accept-encoding": "gzip,deflate",
+  "host": "127.0.0.1:8080",
+  "connection": "close"
+}
+body: "{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]"
+
+[2025-04-02T17:09:45.397Z] [DEBUG][ReqID: I7baCGzHQcwZ7yqEN43yLWrt3Xczz] 完整请求路径: /v1/chat/completions
+[2025-04-02T17:09:45.398Z] [DEBUG][ReqID: I7baCGzHQcwZ7yqEN43yLWrt3Xczz] 请求体是字符串，尝试解析为JSON对象
+[2025-04-02T17:09:45.398Z] [ERROR][ReqID: I7baCGzHQcwZ7yqEN43yLWrt3Xczz] 解析请求体失败: Unterminated string in JSON at position 2014 (line 1 column 2015)
+[2025-04-02T17:09:45.398Z] ERROR LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 400
+message: "解析请求体失败: Unterminated string in JSON at position 2014 (line 1 column 2015)"
+stack: "HttpError: 解析请求体失败: Unterminated string in JSON at position 2014 (line 1 column 2015)\n    at handleCompletions (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:432:13)\n    at async fetch (file:///Users/songjianping/Downloads/openai-gemini-main%202/src/worker.mjs:210:22)"
+
+[2025-04-02T17:09:45.401Z] RESPONSE LOG
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 400
+statusText: ""
+headers: {
+  "access-control-allow-headers": "*",
+  "access-control-allow-methods": "*",
+  "access-control-allow-origin": "*",
+  "content-type": "text/plain;charset=UTF-8"
+}
+body: "解析请求体失败: Unterminated string in JSON at position 2014 (line 1 column 2015)"
+
+[2025-04-02T17:12:49.043Z] REQUEST LOG
+requestId: "qY0Jh07P0nHIYGthFWgBZkRbXlsCl"
+method: "POST"
+url: "http://127.0.0.1:8080/v1/chat/completions"
+headers: {
+  "content-length": "131342",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "Qa/JS 4.78.1",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.78.1",
+  "x-stainless-os": "MacOS",
+  "x-stainless-arch": "arm64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v20.18.2",
+  "authorization": "Bearer sk-4XhOSyRHBlsdZq6CqGHModmnp6yr7TvJfdfKuPyYlLfXD7cq",
+  "http-referer": "https://github.com/RooVetGit/Roo-Cline",
+  "x-title": "Roo Code",
+  "x-stainless-retry-count": "0",
+  "accept-encoding": "gzip,deflate",
+  "host": "127.0.0.1:8080",
+  "connection": "close"
+}
+body: "{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]"
+
+[2025-04-02T17:12:49.045Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] 完整请求路径: /v1/chat/completions
+[2025-04-02T17:12:49.045Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] 使用原始请求体解析成功
+[2025-04-02T17:12:49.047Z] [ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] Attempt 1/4 using Key ID: key-35 for /chat/completions
+[2025-04-02T17:12:49.047Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] 请求体结构: ["model","temperature","messages","stream","stream_options","requestId"]
+[2025-04-02T17:12:49.047Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] Messages存在: true, 长度: 2
+[2025-04-02T17:12:49.047Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] Messages角色: ["system","user"]
+[2025-04-02T17:12:49.048Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] 转换后的请求结构: ["system_instruction","contents","safetySettings","generationConfig"]
+[2025-04-02T17:12:49.048Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] Contents字段存在: true
+[2025-04-02T17:12:49.048Z] [DEBUG][ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] Contents长度: 1
+[2025-04-02T17:12:53.695Z] [ReqID: qY0Jh07P0nHIYGthFWgBZkRbXlsCl] Key key-35 succeeded for /chat/completions
+[2025-04-02T17:12:53.701Z] RESPONSE LOG
+requestId: "qY0Jh07P0nHIYGthFWgBZkRbXlsCl"
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
 status: 200
 statusText: "OK"
 headers: {
@@ -61,9 +247,9 @@ headers: {
   "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
   "content-disposition": "attachment",
   "content-type": "text/event-stream",
-  "date": "Wed, 02 Apr 2025 16:01:54 GMT",
+  "date": "Wed, 02 Apr 2025 17:12:53 GMT",
   "server": "scaffolding on HTTPServer2",
-  "server-timing": "gfet4t7; dur=8735",
+  "server-timing": "gfet4t7; dur=4386",
   "transfer-encoding": "chunked",
   "vary": "Origin, X-Origin, Referer",
   "x-content-type-options": "nosniff",
@@ -72,4 +258,61 @@ headers: {
 }
 body: "[Stream Body]"
 
----
+[2025-04-02T17:12:54.849Z] REQUEST LOG
+requestId: "De5iE34sd5I6LkIGzE6KZKIAKOBY7"
+method: "POST"
+url: "http://127.0.0.1:8080/v1/chat/completions"
+headers: {
+  "content-length": "137068",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "Qa/JS 4.78.1",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.78.1",
+  "x-stainless-os": "MacOS",
+  "x-stainless-arch": "arm64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v20.18.2",
+  "authorization": "Bearer sk-4XhOSyRHBlsdZq6CqGHModmnp6yr7TvJfdfKuPyYlLfXD7cq",
+  "http-referer": "https://github.com/RooVetGit/Roo-Cline",
+  "x-title": "Roo Code",
+  "x-stainless-retry-count": "0",
+  "accept-encoding": "gzip,deflate",
+  "host": "127.0.0.1:8080",
+  "connection": "close"
+}
+body: "{\"model\":\"gemini-2.5-pro-exp-03-25\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are Roo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting\\n\\nTool use is formatted using XML-style tags. The tool name is enclosed in opening and closing tags, and each parameter is similarly enclosed within its own set of tags. Here's the structure:\\n\\n<tool_name>\\n<parameter1_name>value1</parameter1_name>\\n<parameter2_name>value2</parameter2_name>\\n...\\n</tool_name>\\n\\nFor example:\\n\\n<read_file>\\n<path>src/main.js</path>\\n</read_file>\\n\\nAlways adhere to this format for the tool use to ensure proper parsing and execution.\\n\\n# Tools\\n\\n## read_file\\nDescription: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. The output includes line numbers prefixed to each line (e.g. \\\"1 | const x = 1\\\"), making it easier to reference specific lines when creating diffs or discussing code. By specifying start_line and end_line parameters, you can efficiently read specific portions of large files without loading the entire file into memory. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.\\nParameters:\\n- path: (required) The path of the file to read (relative to the current working directory /Users/songjianping/Desktop/song/xpay_admin_api/xpa...[truncated]"
+
+[2025-04-02T17:12:54.850Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] 完整请求路径: /v1/chat/completions
+[2025-04-02T17:12:54.850Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] 使用原始请求体解析成功
+[2025-04-02T17:12:54.851Z] [ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] Attempt 1/4 using Key ID: key-20 for /chat/completions
+[2025-04-02T17:12:54.851Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] 请求体结构: ["model","temperature","messages","stream","stream_options","requestId"]
+[2025-04-02T17:12:54.851Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] Messages存在: true, 长度: 4
+[2025-04-02T17:12:54.851Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] Messages角色: ["system","user","assistant","user"]
+[2025-04-02T17:12:54.851Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] 转换后的请求结构: ["system_instruction","contents","safetySettings","generationConfig"]
+[2025-04-02T17:12:54.851Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] Contents字段存在: true
+[2025-04-02T17:12:54.851Z] [DEBUG][ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] Contents长度: 3
+[2025-04-02T17:13:01.091Z] [ReqID: De5iE34sd5I6LkIGzE6KZKIAKOBY7] Key key-20 succeeded for /chat/completions
+[2025-04-02T17:13:01.094Z] RESPONSE LOG
+requestId: "De5iE34sd5I6LkIGzE6KZKIAKOBY7"
+requestUrl: "http://127.0.0.1:8080/v1/chat/completions"
+status: 200
+statusText: "OK"
+headers: {
+  "access-control-allow-headers": "*",
+  "access-control-allow-methods": "*",
+  "access-control-allow-origin": "*",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "content-disposition": "attachment",
+  "content-type": "text/event-stream",
+  "date": "Wed, 02 Apr 2025 17:13:01 GMT",
+  "server": "scaffolding on HTTPServer2",
+  "server-timing": "gfet4t7; dur=6140",
+  "transfer-encoding": "chunked",
+  "vary": "Origin, X-Origin, Referer",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "SAMEORIGIN",
+  "x-xss-protection": "0"
+}
+body: "[Stream Body]"
+

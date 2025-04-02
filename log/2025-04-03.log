@@ -1,0 +1,75 @@
+[2025-04-02T16:01:45.137Z] REQUEST LOG
+method: "POST"
+url: "http://127.0.0.1:8080/v1/v1/chat/completions"
+headers: {
+  "host": "127.0.0.1:8080",
+  "connection": "keep-alive",
+  "content-length": "1322",
+  "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
+  "x-title": "Cherry Studio",
+  "http-referer": "https://cherry-ai.com",
+  "x-stainless-retry-count": "0",
+  "sec-ch-ua-mobile": "?0",
+  "authorization": "Bearer",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) CherryStudio/1.1.17 Chrome/126.0.6478.234 Electron/31.7.6 Safari/537.36",
+  "content-type": "application/json",
+  "accept": "application/json",
+  "x-api-key": "",
+  "sec-ch-ua-platform": "\"macOS\"",
+  "sec-fetch-site": "cross-site",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "zh-CN"
+}
+body: {
+  "model": "gemini-2.5-pro-exp-03-25",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey there! 👋\n\nWhat can I do for you today?Hey there! 👋\n\nWhat can I do for you today?"
+    },
+    {
+      "role": "user",
+      "content": "介绍你自己"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！我是一个大型语言模型，由 Google 训练。\n\n你好！我是一个大型语言模型，由 Google 训练。\n\n我可以做很多事情，比如：\n\n1.  **回答你的问题**：无论是关于事实、概念还是其他的疑问，我都会尽力提供信息。\n2.  **生成文本**：我可以写故事、诗歌、邮件、代码，或者帮你构思内容。\n3.  **翻译语言**：我可以帮你理解或转换不同语言的文本。\n4.  **总结信息**：我可以帮你提炼长篇文章或对话的要点。\n5.  **和你聊天**：我们可以就各种话题进行对话。\n\n简单来说，我是一个基于文本的AI，旨在帮助你获取信息、解决问题和进行创造性的工作。\n\n你想了解我的哪方面，或者有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "帮我使用 python 写一个 hello word "
+    }
+  ],
+  "stream": true
+}
+
+---
+[2025-04-02T16:01:54.191Z] RESPONSE LOG
+requestUrl: "http://127.0.0.1:8080/v1/v1/chat/completions"
+status: 200
+statusText: "OK"
+headers: {
+  "access-control-allow-headers": "*",
+  "access-control-allow-methods": "*",
+  "access-control-allow-origin": "*",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "content-disposition": "attachment",
+  "content-type": "text/event-stream",
+  "date": "Wed, 02 Apr 2025 16:01:54 GMT",
+  "server": "scaffolding on HTTPServer2",
+  "server-timing": "gfet4t7; dur=8735",
+  "transfer-encoding": "chunked",
+  "vary": "Origin, X-Origin, Referer",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "SAMEORIGIN",
+  "x-xss-protection": "0"
+}
+body: "[Stream Body]"
+
+---

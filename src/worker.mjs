@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import keyManager from './keyManager.mjs'; // 导入密钥管理器
+import { logToFile, formatLog } from './logger.mjs'; // 导入日志模块
 
 // 初始化密钥管理器
 let keysLoaded = false;
@@ -9,9 +10,8 @@ async function ensureKeysLoaded() {
     if (success) {
       keysLoaded = true;
     } else {
-      // 如果密钥加载失败，可能需要抛出错误或采取其他措施
       console.error("FATAL: Failed to load API keys. Key Manager will not function.");
-      // 在这种情况下，服务可能无法正常处理请求
+      await logToFile(formatLog('ERROR', { message: "FATAL: Failed to load API keys." }));
     }
   }
 }
@@ -35,14 +35,27 @@ const fixCors = ({ headers, status, statusText }) => {
 };
 
 // OPTIONS请求处理
-const handleOPTIONS = async () => {
-  return new Response(null, {
+const handleOPTIONS = async (request) => {
+  // Log OPTIONS request info
+  await logToFile(formatLog('REQUEST', {
+    method: request.method,
+    url: request.url,
+    headers: Object.fromEntries(request.headers.entries())
+  }));
+  const response = new Response(null, {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "*",
       "Access-Control-Allow-Headers": "*",
     }
   });
+  // Log OPTIONS response info
+  await logToFile(formatLog('RESPONSE', {
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries())
+  }));
+  return response;
 };
 
 // Gemini API基础URL和版本
@@ -60,27 +73,109 @@ const makeHeaders = (apiKey, more) => ({
 });
 
 // 错误处理函数
-const errHandler = (err) => {
-  console.error(err);
+const errHandler = async (err, requestUrl = 'N/A') => { // 添加 requestUrl 参数
+  console.error(`Error handling request for ${requestUrl}:`, err);
   // 尝试从自定义错误中获取状态码，否则默认为500
   const status = err instanceof HttpError ? err.status : 500;
-  return new Response(err.message || 'Internal Server Error', fixCors({ status }));
+  const message = err.message || 'Internal Server Error';
+
+  // Log error details
+  await logToFile(formatLog('ERROR', {
+    requestUrl: requestUrl,
+    status: status,
+    message: message,
+    stack: err.stack // Include stack trace if available
+  }));
+
+  const response = new Response(message, fixCors({ status }));
+
+  // Log error response details
+  await logToFile(formatLog('RESPONSE', {
+    requestUrl: requestUrl, // Log which request resulted in this error response
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    body: message // Log the error message sent to client
+  }));
+
+  return response;
 };
+
+// Helper to safely get request body for logging
+async function getRequestBodyForLog(request) {
+    if (request.method === 'GET' || request.method === 'HEAD' || request.method === 'OPTIONS') {
+        return null; // No body or not relevant
+    }
+    try {
+        // Clone the request to read the body without consuming it for the actual handler
+        const clonedRequest = request.clone();
+        const contentType = clonedRequest.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await clonedRequest.json();
+        } else {
+            // For other types, just log that a body exists or try text (might be large)
+            const text = await clonedRequest.text();
+             return text.length > 1000 ? text.substring(0, 1000) + '...[truncated]' : text; // Limit size
+        }
+    } catch (e) {
+        return `[Error reading body: ${e.message}]`;
+    }
+}
+
+// Helper to safely get response body for logging
+async function getResponseBodyForLog(response) {
+    try {
+        // Clone the response to read the body
+        const clonedResponse = response.clone();
+        const contentType = clonedResponse.headers.get('content-type');
+
+        // Avoid logging large binary data or streams directly
+        if (clonedResponse.body instanceof ReadableStream) {
+             // For streams, maybe log content type and length if available?
+             // Reading the whole stream here would consume it.
+             return '[Stream Body]';
+        }
+         if (contentType && (contentType.includes('image/') || contentType.includes('audio/') || contentType.includes('video/'))) {
+             return `[Binary Body: ${contentType}]`;
+         }
+
+        if (contentType && contentType.includes('application/json')) {
+            return await clonedResponse.json();
+        } else {
+            const text = await clonedResponse.text();
+            return text.length > 1000 ? text.substring(0, 1000) + '...[truncated]' : text; // Limit size
+        }
+    } catch (e) {
+        return `[Error reading body: ${e.message}]`;
+    }
+}
+
 
 // 主fetch处理函数
 export default {
   async fetch (request) {
-    // 确保密钥已加载
-    await ensureKeysLoaded();
-
-    if (request.method === "OPTIONS") {
-      return handleOPTIONS();
-    }
+    const requestUrl = request.url; // Store URL for logging, especially in error cases
+    let response;
+    let requestBodyForLog = null; // Initialize
 
     try {
-      // 移除从请求中获取API密钥的代码
-      // const auth = request.headers.get("Authorization");
-      // const apiKey = auth?.split(" ")[1];
+      // 确保密钥已加载
+      await ensureKeysLoaded();
+
+      // Log request *before* consuming body for handlers
+      requestBodyForLog = await getRequestBodyForLog(request); // Get body safely
+      await logToFile(formatLog('REQUEST', {
+        method: request.method,
+        url: requestUrl,
+        headers: Object.fromEntries(request.headers.entries()),
+        body: requestBodyForLog // Log the captured body
+      }));
+
+
+      if (request.method === "OPTIONS") {
+        return await handleOPTIONS(request); // Pass request for logging
+      }
+
 
       const assert = (success, message = "Method Not Allowed", status = 405) => {
         if (!success) {
@@ -88,52 +183,63 @@ export default {
         }
       };
 
-      const { pathname } = new URL(request.url);
+      const { pathname } = new URL(requestUrl);
 
+      // --- Routing ---
       switch (true) {
         case pathname.endsWith("/chat/completions"):
           assert(request.method === "POST");
-          // 修改调用，不传递apiKey参数
-          return handleCompletions(await request.json())
-            .catch(errHandler);
+          // Pass request body directly if already read, otherwise let handler read it
+          const chatReqBody = requestBodyForLog || await request.json();
+          response = await handleCompletions(chatReqBody);
+          break;
         case pathname.endsWith("/embeddings"):
           assert(request.method === "POST");
-          // 同样修改其他处理函数调用 (假设它们也需要修改)
-          return handleEmbeddings(await request.json())
-            .catch(errHandler);
+          const embedReqBody = requestBodyForLog || await request.json();
+          response = await handleEmbeddings(embedReqBody);
+          break;
         case pathname.endsWith("/models"):
           assert(request.method === "GET");
-          // 同样修改其他处理函数调用 (假设它们也需要修改)
-          return handleModels()
-            .catch(errHandler);
-
-        // 添加新的管理API端点
+          response = await handleModels();
+          break;
         case pathname.endsWith("/admin/keys/stats"):
           assert(request.method === "GET", "Method Not Allowed", 405);
-          return handleKeyStats()
-            .catch(errHandler);
-
-        case pathname.match(/\/admin\/keys\/reset\/key-\d+$/): // 匹配 /admin/keys/reset/key-数字
+          response = await handleKeyStats();
+          break;
+        case pathname.match(/\/admin\/keys\/reset\/key-\d+$/):
           assert(request.method === "POST", "Method Not Allowed", 405);
           const keyId = pathname.split('/').pop();
-          return handleKeyReset(keyId)
-            .catch(errHandler);
-
+          response = await handleKeyReset(keyId);
+          break;
         case pathname.endsWith("/admin/keys/config"):
           if (request.method === "GET") {
-            return handleGetConfig()
-              .catch(errHandler);
+            response = await handleGetConfig();
           } else if (request.method === "POST") {
-            return handleUpdateConfig(await request.json())
-              .catch(errHandler);
+             const configReqBody = requestBodyForLog || await request.json();
+            response = await handleUpdateConfig(configReqBody);
+          } else {
+             throw new HttpError("Method Not Allowed", 405);
           }
-          throw new HttpError("Method Not Allowed", 405);
-
+          break;
         default:
           throw new HttpError("Not Found", 404);
       }
+
+      // Log successful response
+      const responseBodyForLog = await getResponseBodyForLog(response);
+      await logToFile(formatLog('RESPONSE', {
+        requestUrl: requestUrl,
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        body: responseBodyForLog
+      }));
+
+      return response;
+
     } catch (err) {
-      return errHandler(err);
+      // Use the specific errHandler, passing the request URL
+      return await errHandler(err, requestUrl);
     }
   }
 };
@@ -141,7 +247,7 @@ export default {
 
 // --- 处理函数 ---
 
-// 处理 /models 请求 (需要修改以使用keyManager)
+// 处理 /models 请求 (使用keyManager)
 async function handleModels() {
   let response;
   let usedKey;
@@ -165,7 +271,7 @@ async function handleModels() {
         continue;
       }
       keyManager.markKeyUsed(usedKey, responseTime);
-      break;
+      break; // Success
     } catch (error) {
       if (usedKey) keyManager.markKeyCooling(usedKey);
       attempts++;
@@ -174,9 +280,12 @@ async function handleModels() {
     }
   }
 
-  let { body } = response;
+  let body;
+  const responseToLog = response.clone(); // Clone before reading body
+
   if (response.ok) {
-    const { models } = JSON.parse(await response.text());
+    const text = await response.text(); // Read body from original response
+    const { models } = JSON.parse(text);
     body = JSON.stringify({
       object: "list",
       data: models.map(({ name }) => ({
@@ -186,13 +295,19 @@ async function handleModels() {
         owned_by: "",
       })),
     }, null, "  ");
+     // Return a new response with the processed body
+     return new Response(body, fixCors(responseToLog));
+  } else {
+      // If not ok, return the original cloned response (error handled by caller)
+      // Or create a new error response based on the original status/headers
+      const errorText = await response.text();
+      return new Response(errorText, fixCors(responseToLog));
   }
-  return new Response(body, fixCors(response));
 }
 
-// 处理 /embeddings 请求 (需要修改以使用keyManager)
+// 处理 /embeddings 请求 (使用keyManager)
 const DEFAULT_EMBEDDINGS_MODEL = "text-embedding-004";
-async function handleEmbeddings(req) {
+async function handleEmbeddings(req) { // Receive parsed request body
   if (typeof req.model !== "string") {
     throw new HttpError("model is not specified", 400);
   }
@@ -237,7 +352,7 @@ async function handleEmbeddings(req) {
         continue;
       }
       keyManager.markKeyUsed(usedKey, responseTime);
-      break;
+      break; // Success
     } catch (error) {
       if (usedKey) keyManager.markKeyCooling(usedKey);
       attempts++;
@@ -246,9 +361,12 @@ async function handleEmbeddings(req) {
     }
   }
 
-  let { body } = response;
+  let body;
+  const responseToLog = response.clone(); // Clone before reading body
+
   if (response.ok) {
-    const { embeddings } = JSON.parse(await response.text());
+     const text = await response.text(); // Read body from original response
+    const { embeddings } = JSON.parse(text);
     body = JSON.stringify({
       object: "list",
       data: embeddings.map(({ values }, index) => ({
@@ -258,13 +376,16 @@ async function handleEmbeddings(req) {
       })),
       model: req.model,
     }, null, "  ");
+     return new Response(body, fixCors(responseToLog));
+  } else {
+      const errorText = await response.text();
+      return new Response(errorText, fixCors(responseToLog));
   }
-  return new Response(body, fixCors(response));
 }
 
 // 处理 /chat/completions 请求 (使用keyManager)
 const DEFAULT_MODEL = "gemini-1.5-pro-latest";
-async function handleCompletions(req) {
+async function handleCompletions(req) { // Receive parsed request body
   let model = DEFAULT_MODEL;
   switch(true) {
     case typeof req.model !== "string":
@@ -289,68 +410,50 @@ async function handleCompletions(req) {
 
   while (attempts <= maxRetries) { // <= 因为第一次不算重试
     try {
-      // 获取可用密钥
       usedKey = keyManager.getAvailableKey();
-
       const requestStartTime = Date.now();
-
-      // 发起请求
       response = await fetch(url, {
         method: "POST",
         headers: makeHeaders(usedKey.key, { "Content-Type": "application/json" }),
-        body: JSON.stringify(await transformRequest(req)),
+        body: JSON.stringify(await transformRequest(req)), // Transform needs original req
       });
-
       const responseTime = Date.now() - requestStartTime;
 
-      // 如果响应不成功，标记密钥冷却并重试
       if (!response.ok) {
         keyManager.markKeyCooling(usedKey);
         attempts++;
-
         if (attempts > maxRetries) {
-          // 尝试读取错误信息
           let errorBody = 'Unknown API Error';
-          try {
-            errorBody = await response.text();
-          } catch (e) { /* ignore read error */ }
+          try { errorBody = await response.text(); } catch (e) {}
           throw new HttpError(`API请求失败 (${response.status}): ${errorBody}`, response.status);
         }
-
         keyManager.metrics.recordRetry();
         continue;
       }
-
-      // 记录成功使用
       keyManager.markKeyUsed(usedKey, responseTime);
-
-      // 处理成功，退出循环
-      break;
+      break; // Success
     } catch (error) {
-      // 请求异常，标记密钥冷却
-      if (usedKey) {
-        keyManager.markKeyCooling(usedKey);
-      }
+      if (usedKey) keyManager.markKeyCooling(usedKey);
       attempts++;
-
-      // 如果达到最大重试次数，抛出异常
       if (attempts > maxRetries) {
         throw new HttpError(`处理请求出错: ${error.message}`, error.status || 500);
       }
-
       keyManager.metrics.recordRetry();
     }
   }
 
   const totalTime = Date.now() - startTime;
-  keyManager.logger.info(`Completed request in ${totalTime}ms with ${attempts -1} retries`); // attempts-1 是实际重试次数
+  keyManager.logger.info(`Completed request in ${totalTime}ms with ${attempts -1} retries`);
 
-  // 处理响应体
-  let body = response.body;
+  // --- Response Processing ---
+  // We need to return the response, but also potentially log its body.
+  // The main fetch handler will clone and log the final response.
+  // Here, we just process the body if needed (non-stream) or pass the stream.
+
   if (response.ok) {
-    let id = generateChatcmplId();
     if (req.stream) {
-      body = response.body
+      // For streams, pass the original response body through transforms
+      const transformedStream = response.body
         .pipeThrough(new TextDecoderStream())
         .pipeThrough(new TransformStream({
           transform: parseStream,
@@ -361,21 +464,32 @@ async function handleCompletions(req) {
           transform: toOpenAiStream,
           flush: toOpenAiStreamFlush,
           streamIncludeUsage: req.stream_options?.include_usage,
-          model, id, last: [],
+          model, id: generateChatcmplId(), last: [],
         }))
         .pipeThrough(new TextEncoderStream());
+      // Return a new response with the transformed stream and original headers/status
+      return new Response(transformedStream, fixCors(response));
     } else {
-      body = await response.text();
-      body = processCompletionsResponse(JSON.parse(body), model, id);
+      // For non-streams, read the body, process it, and return a new response
+      const responseBody = await response.text();
+      const processedBody = processCompletionsResponse(JSON.parse(responseBody), model, generateChatcmplId());
+      // Create a new response with the processed body
+      const newResponse = new Response(processedBody, fixCors(response));
+      // Add content-type header for JSON
+      newResponse.headers.set('Content-Type', 'application/json');
+      return newResponse;
     }
+  } else {
+      // If not ok, just return the original error response
+      // The main fetch handler will log it.
+      return response;
   }
-
-  return new Response(body, fixCors(response));
 }
 
 // --- 辅助函数 ---
 
-// 转换请求格式
+// 转换请求格式 (HarmCategory, safetySettings, fieldsMap, transformConfig, parseImg, transformMsg, transformMessages, transformRequest)
+// ... (Keep these functions as they were, they are needed by handleCompletions)
 const harmCategory = [
   "HARM_CATEGORY_HATE_SPEECH",
   "HARM_CATEGORY_SEXUALLY_EXPLICIT",
@@ -513,6 +627,7 @@ const transformRequest = async (req) => ({
   generationConfig: transformConfig(req),
 });
 
+
 // 生成唯一ID
 const generateChatcmplId = () => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -520,7 +635,8 @@ const generateChatcmplId = () => {
   return "chatcmpl-" + Array.from({ length: 29 }, randomChar).join("");
 };
 
-// 转换响应格式
+// 转换响应格式 (reasonsMap, SEP, transformCandidates, transformCandidatesMessage, transformCandidatesDelta, transformUsage, processCompletionsResponse)
+// ... (Keep these functions as they were)
 const reasonsMap = {
   "STOP": "stop",
   "MAX_TOKENS": "length",
@@ -560,9 +676,12 @@ const processCompletionsResponse = (data, model, id) => {
   });
 };
 
-// 处理流式响应
+
+// 处理流式响应 (responseLineRE, parseStream, parseStreamFlush, delimiter, transformResponseStream, toOpenAiStream, toOpenAiStreamFlush)
+// ... (Keep these functions as they were, but ensure 'this' context is handled if needed, e.g., binding 'this' if methods are passed directly)
 const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 async function parseStream (chunk, controller) {
+  // 'this' context (this.buffer) is managed by TransformStream
   chunk = await chunk;
   if (!chunk) { return; }
   this.buffer += chunk;
@@ -574,13 +693,12 @@ async function parseStream (chunk, controller) {
   } while (true);
 }
 async function parseStreamFlush (controller) {
+  // 'this' context (this.buffer) is managed by TransformStream
   if (this.buffer) {
-    // Try to parse the remaining buffer as JSON, might be an error object
     try {
       const jsonData = JSON.parse(this.buffer);
       if (jsonData.error) {
         console.error("Stream ended with error:", jsonData.error);
-        // You might want to enqueue a specific error message here
         controller.enqueue(JSON.stringify({
           id: this.id || generateChatcmplId(),
           choices: [{ index: 0, delta: {}, finish_reason: "error", error: jsonData.error }],
@@ -589,11 +707,10 @@ async function parseStreamFlush (controller) {
           object: "chat.completion.chunk",
         }));
       } else {
-         controller.enqueue(this.buffer); // Enqueue remaining valid data if any
+         controller.enqueue(this.buffer);
       }
     } catch (e) {
        console.error("Invalid data at end of stream:", this.buffer);
-       // Enqueue a generic error chunk
        controller.enqueue(JSON.stringify({
          id: this.id || generateChatcmplId(),
          choices: [{ index: 0, delta: {}, finish_reason: "error", error: { message: "Invalid stream data" } }],
@@ -606,11 +723,10 @@ async function parseStreamFlush (controller) {
 }
 
 const delimiter = "\n\n";
+// Note: transformResponseStream uses 'this' (this.id, this.model, etc.)
+// It's bound correctly when used in the TransformStream constructor below.
 function transformResponseStream (data, stop, first) {
-  // Ensure candidates exist and have at least one element
   if (!data.candidates || data.candidates.length === 0) {
-    // Handle cases like safety blocks which might not have candidates
-    // Or just return an empty chunk? Let's create a minimal chunk.
     return "data: " + JSON.stringify({
       id: this.id,
       choices: [{
@@ -627,18 +743,16 @@ function transformResponseStream (data, stop, first) {
 
   const item = transformCandidatesDelta(data.candidates[0]);
   if (stop) {
-    item.delta = {}; // Stop signal has empty delta
+    item.delta = {};
   } else {
-    item.finish_reason = null; // Intermediate chunks don't have finish_reason
+    item.finish_reason = null;
   }
-  // Ensure delta exists even if content is null
   item.delta = item.delta || {};
   if (first) {
-    // First chunk might not have content, but should have role
     item.delta.role = "assistant";
-    if (!item.delta.content) item.delta.content = ""; // Ensure content field exists
+    if (!item.delta.content) item.delta.content = "";
   } else {
-    delete item.delta.role; // Subsequent chunks don't repeat role
+    delete item.delta.role;
   }
 
   const output = {
@@ -654,8 +768,10 @@ function transformResponseStream (data, stop, first) {
   return "data: " + JSON.stringify(output) + delimiter;
 }
 
+// Note: toOpenAiStream uses 'this' (this.last)
+// It's bound correctly when used in the TransformStream constructor below.
 async function toOpenAiStream (chunk, controller) {
-  const transform = transformResponseStream.bind(this);
+  const transform = transformResponseStream.bind(this); // Bind 'this' for transform function
   const line = await chunk;
   if (!line) { return; }
   let data;
@@ -664,7 +780,6 @@ async function toOpenAiStream (chunk, controller) {
   } catch (err) {
     console.error("Error parsing stream line:", line);
     console.error(err);
-    // Create an error chunk to send to the client
     const errorData = {
       candidates: [{
         index: 0,
@@ -672,78 +787,62 @@ async function toOpenAiStream (chunk, controller) {
         content: { parts: [{ text: `Stream parsing error: ${err.message}` }] }
       }]
     };
-    controller.enqueue(transform(errorData, true)); // Send as a final chunk with error
+    controller.enqueue(transform(errorData, true));
     return;
   }
 
-  // Handle potential prompt feedback (e.g., safety blocks)
   if (data.promptFeedback && data.promptFeedback.blockReason) {
       console.warn(`Stream blocked due to: ${data.promptFeedback.blockReason}`);
-      // Send a chunk indicating content filter finish reason
       const blockData = {
           candidates: [{
               index: 0,
-              finishReason: "SAFETY", // Map to OpenAI's content_filter
-              content: null // No content when blocked
+              finishReason: "SAFETY",
+              content: null
           }],
-          usageMetadata: data.usageMetadata // Include usage if available
+          usageMetadata: data.usageMetadata
       };
-      controller.enqueue(transform(blockData, true)); // Send as final chunk
+      controller.enqueue(transform(blockData, true));
       return;
   }
 
-
-  // Ensure candidates exist before proceeding
   if (!data.candidates || data.candidates.length === 0) {
-      // If no candidates and no block reason, it might be an empty final chunk or unexpected data
       console.warn("Received stream chunk with no candidates and no block reason:", data);
-       // Send usage data if available and it's the final chunk
       if (data.usageMetadata && this.streamIncludeUsage) {
           const usageData = {
-              candidates: [{ index: 0, finishReason: "stop", content: null }], // Assume stop if no other reason
+              candidates: [{ index: 0, finishReason: "stop", content: null }],
               usageMetadata: data.usageMetadata
           };
           controller.enqueue(transform(usageData, true));
       }
-      return; // Don't process further if no candidates
+      return;
   }
-
 
   const cand = data.candidates[0];
   cand.index = cand.index || 0;
 
-  // Initialize last array if needed
   if (!this.last) this.last = [];
 
   if (!this.last[cand.index]) {
-    // First chunk for this candidate index
-    controller.enqueue(transform(data, false, true)); // Pass 'first' flag
+    controller.enqueue(transform(data, false, true));
   }
-  this.last[cand.index] = data; // Store the last received data for this index
+  this.last[cand.index] = data;
 
-  // Send intermediate content chunk if content exists
   if (cand.content && cand.content.parts && cand.content.parts.some(p => p.text)) {
-    controller.enqueue(transform(data, false, false)); // Not first, not stop
+    controller.enqueue(transform(data, false, false));
   }
 
-  // If this chunk indicates a finish reason, send the final chunk with usage
   if (cand.finishReason) {
-      controller.enqueue(transform(data, true, false)); // Send final chunk (stop=true)
+      controller.enqueue(transform(data, true, false));
   }
 }
+// Note: toOpenAiStreamFlush uses 'this' (this.last)
+// It's bound correctly when used in the TransformStream constructor below.
 async function toOpenAiStreamFlush (controller) {
-  // This flush might not be strictly necessary if the stream always ends with a finishReason chunk
-  // However, it can handle cases where the stream terminates unexpectedly.
-  const transform = transformResponseStream.bind(this);
+  const transform = transformResponseStream.bind(this); // Bind 'this'
   if (this.last && this.last.length > 0) {
-    // Check if the last received chunk already had a finish reason
-    const lastData = this.last[this.last.length - 1]; // Assuming single candidate stream for simplicity
+    const lastData = this.last[this.last.length - 1];
     if (!lastData?.candidates?.[0]?.finishReason) {
-      // If the stream ended without a proper finish signal, send a final [DONE] chunk
-      // We might not have usage data here.
        console.warn("Stream flushing without a final finishReason chunk.");
-       // Send a minimal stop chunk if needed, or just the DONE signal
-       // controller.enqueue(transform({ candidates: [{ index: 0, finishReason: "stop" }] }, true));
     }
   }
   controller.enqueue("data: [DONE]" + delimiter);
@@ -757,35 +856,71 @@ async function handleKeyStats() {
     keys: keyManager.getKeyStats(),
     global: keyManager.getGlobalStats()
   };
-  return new Response(JSON.stringify(stats, null, 2), fixCors({
+   const response = new Response(JSON.stringify(stats, null, 2), fixCors({
     status: 200,
     headers: { "Content-Type": "application/json" }
   }));
+   // Log admin response
+   await logToFile(formatLog('RESPONSE', {
+       requestUrl: '/admin/keys/stats', // Hardcoded for admin endpoint
+       status: response.status,
+       statusText: response.statusText,
+       headers: Object.fromEntries(response.headers.entries()),
+       body: stats // Log the stats object
+   }));
+   return response;
 }
 
 async function handleKeyReset(keyId) {
   await ensureKeysLoaded();
   const success = keyManager.resetKey(keyId);
-  return new Response(JSON.stringify({ success }), fixCors({
+   const response = new Response(JSON.stringify({ success }), fixCors({
     status: success ? 200 : 404,
     headers: { "Content-Type": "application/json" }
   }));
+   // Log admin response
+   await logToFile(formatLog('RESPONSE', {
+       requestUrl: `/admin/keys/reset/${keyId}`,
+       status: response.status,
+       statusText: response.statusText,
+       headers: Object.fromEntries(response.headers.entries()),
+       body: { success }
+   }));
+   return response;
 }
 
 async function handleGetConfig() {
   await ensureKeysLoaded();
   const config = keyManager.getConfig();
-  return new Response(JSON.stringify(config, null, 2), fixCors({
+   const response = new Response(JSON.stringify(config, null, 2), fixCors({
     status: 200,
     headers: { "Content-Type": "application/json" }
   }));
+   // Log admin response
+   await logToFile(formatLog('RESPONSE', {
+       requestUrl: '/admin/keys/config',
+       status: response.status,
+       statusText: response.statusText,
+       headers: Object.fromEntries(response.headers.entries()),
+       body: config
+   }));
+   return response;
 }
 
 async function handleUpdateConfig(newConfig) {
   await ensureKeysLoaded();
   const config = keyManager.updateConfig(newConfig);
-  return new Response(JSON.stringify(config, null, 2), fixCors({
+   const response = new Response(JSON.stringify(config, null, 2), fixCors({
     status: 200,
     headers: { "Content-Type": "application/json" }
   }));
+   // Log admin response
+   await logToFile(formatLog('RESPONSE', {
+       requestUrl: '/admin/keys/config (POST)',
+       status: response.status,
+       statusText: response.statusText,
+       headers: Object.fromEntries(response.headers.entries()),
+       body: config // Log the updated config
+   }));
+   return response;
 }

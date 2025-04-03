@@ -2,3 +2,5 @@ node_modules
 .netlify
 .vercel
 .wrangler
+log/*
+*.log
